@@ -1,22 +1,9 @@
-pub struct Field{
-	text: &'static str,
-	confirm: bool,
-	hidden: bool,
-	condition: Option<&'static str>,
-	checker: Option<dyn FnOnce(&str) -> bool>
+pub struct Asker{
+	fields: Vec<(String, bool, bool, String, dyn Fn(&str) -> bool)>	
 }
 
-pub struct Asker{
-	fields: Vec<Field>	
-}
-pub fn defaults(){
-	return Field{
-		text: "Example field",
-		confirm: false,
-		hidden: false,
-		condition: None,
-		checker: None
-	};
+fn truish(t: &str){
+	return true;
 }
 
 impl Asker {
@@ -26,8 +13,8 @@ impl Asker {
 		};	
 	}
 
-	pub fn add(&mut self, f: Field) {
-		self.fields.push(f);
+	pub fn add(&mut self, ) {
+		self.fields.push();
 	}
 
 	pub fn boot(){
