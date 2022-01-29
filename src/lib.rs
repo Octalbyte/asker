@@ -1,10 +1,8 @@
 pub struct Asker<'a>{
-	fields: Vec<(&'a str, bool, bool, &'a str, Box<dyn Fn(&str) -> bool>)>	
+	fields: Vec<(&'a str, bool, bool, &'a str, Box< FnOnce(&str) -> bool>)>	
 }
 
-fn truish(t: &str) -> bool{
-	return true;
-}
+
 
 impl Asker<'_> {
     pub fn new(&self) -> Asker {
@@ -13,7 +11,7 @@ impl Asker<'_> {
 		};	
 	}
 
-	pub fn add(&mut self, name: &str, opts: Vec<&str>, check: Option<Box<dyn Fn(&str) -> bool>>) {
+	pub fn add(&mut self, name: &str, opts: Vec<&str>, check: Option<Box<FnOnce(&str) -> bool>) {
 	let mut hidden = false;
 	if opts.iter().any(|&i| i=="hidden") {
     	hidden = true;
@@ -22,13 +20,16 @@ impl Asker<'_> {
 	if opts.iter().any(|&i| i=="hidden") {
     	confirm = true;
 	}
+	
 	let mut helpcheck = "";
 	for i in opts.iter() {
 		if i != &"hidden" && i != &"confirm"{
 			helpcheck = i ;
 		}
 	}
-	let mut checker = Box::new((&truish).to_owned());
+	let mut checker = Box::new(|| s: &str{
+		return true;
+	});
 	match check {
 		Some(i) => {
 			checker = i;
