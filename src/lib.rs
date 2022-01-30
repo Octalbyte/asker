@@ -4,6 +4,8 @@ use regex::Regex;
 		fields: Vec<(&str, Vec<&str>, Option<Regex>)>	
 	) {
 
-		for i in fields.iter()
+		for i in fields.iter(){
+			let name, opts, checker = i;
+		}
 
 	}
