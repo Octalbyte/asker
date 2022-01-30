@@ -1,17 +1,19 @@
+use regex::Regex;
+
 pub struct Asker<'a>{
-	fields: Vec<(&'a str, bool, bool, &'a str, Box< FnOnce(&str) -> bool>)>	
+	fields: Vec<(&'a str, bool, bool, &'a str, &'a Regex)>	
 }
 
 
 
-impl Asker<'_> {
+impl Asker {
     pub fn new(&self) -> Asker {
 		return Asker{
 			fields: vec![]
 		};	
 	}
 
-	pub fn add(&mut self, name: &str, opts: Vec<&str>, check: Option<Box<FnOnce(&str) -> bool>) {
+	pub fn add(&mut self, name: &str, opts: Vec<&str>, check: Option<&Regex>) {
 	let mut hidden = false;
 	if opts.iter().any(|&i| i=="hidden") {
     	hidden = true;
@@ -27,9 +29,9 @@ impl Asker<'_> {
 			helpcheck = i ;
 		}
 	}
-	let mut checker = Box::new(|| s: &str{
-		return true;
-	});
+	
+	let checker = &Regex::new(r".*").unwrap();
+		
 	match check {
 		Some(i) => {
 			checker = i;
@@ -37,8 +39,10 @@ impl Asker<'_> {
 		None => {
 
 		}
+	
 	}
-	self.fields.push((name, hidden, confirm, helpcheck, checker));			
+	
+	self.fields.push((name, hidden, confirm, helpcheck, checker));	
 }
 
 	pub fn boot(){
