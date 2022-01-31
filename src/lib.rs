@@ -7,8 +7,8 @@ use std::collections::HashMap;
 		fields: Vec<(&str, Vec<&str>, Option<Regex>)>	
 	) -> (HashMap<String, String>, HashMap<String, bool>){
 
-		let mut str_matches: HashMap<String, String> = HashMap::new();
-		let mut bool_matches: HashMap<String, bool> = HashMap::new();
+		let str_matches: HashMap<String, String> = HashMap::new();
+		let bool_matches: HashMap<String, bool> = HashMap::new();
 
 		for i in fields.iter(){
 			let (name, opts, checker) = i;
@@ -18,7 +18,7 @@ use std::collections::HashMap;
 			let mut default = None; 
 			let mut req = None;
 			let mut id = name.to_owned();
-			let mut stuff: Vec<&str> = vec![];
+			//let mut stuff: Vec<&str> = vec![];
 
 			for wrd in opts.iter(){
 				match wrd {
@@ -34,10 +34,8 @@ use std::collections::HashMap;
 					a => { 
 						let b: String = String::from(a.to_owned());
 						if b.starts_with("default:"){
-							let s = b.replacen("default:","",1);
-							let s = s.as_str();
-							stuff.push(format!("{}", s.clone()).as_str());
-							default = Some(stuff[0]);
+							
+							default = Some(b.replacen("default:","",1).as_str());
 						}
 						if b.starts_with("req:"){
 							req = Some(b.replacen("req:", "",1).as_str());
@@ -50,13 +48,13 @@ use std::collections::HashMap;
 			}
 			
 			let match_any = Regex::new(r".*").unwrap();
-			let reg = match checker {
+			let _reg = match checker {
 				Some(exp) => exp,
 				None => {
 					&match_any
 				}
 			};
-			
+			/*
 			if isbool {
 				safe_print(name);
 				match default {
@@ -75,6 +73,7 @@ use std::collections::HashMap;
 				}
 
 			}
+			*/
 			/*
 			print!("Enter a number: ");
 			    io::stdout().flush().unwrap();
