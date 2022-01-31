@@ -2,13 +2,16 @@ use regex::Regex;
 use std::io;
 use std::io::Write;
 use std::collections::HashMap;
+use crossterm::{
+	self, Event, read
+}
 
 	pub fn ask(
 		fields: Vec<(&str, Vec<&str>, Option<Regex>)>	
 	) -> (HashMap<String, String>, HashMap<String, bool>){
 
-		let str_matches: HashMap<String, String> = HashMap::new();
-		let bool_matches: HashMap<String, bool> = HashMap::new();
+		let mut str_matches: HashMap<String, String> = HashMap::new();
+		let mut bool_matches: HashMap<String, bool> = HashMap::new();
 
 		for i in fields.iter(){
 			let (name, opts, checker) = i;
@@ -72,8 +75,39 @@ use std::collections::HashMap;
 					}
 				}
 
+				loop {
+					// `read()` blocks until an `Event` is available
+					match read().unwrap() {
+						Event::Key(event) => {
+							match event.code {
+								Keycode::Char('y') => {
+									safe_print("y");
+									bool_matches.insert(String::from(id), true);
+								}
+								Keycode::Char('Y') => {
+									safe_print("Y");
+									bool_matches.insert(String::from(id), true);
+								}
+								Keycode::Char('n') => {
+									safe_print("n");
+									bool_matches.insert(String::from(id), false);
+								}
+								Keycode::Char('N') => {
+									safe_print("N");
+									bool_matches.insert(String::from(id), false);
+								}
+								Keycode::Enter => {
+
+								}
+							}
+						},
+						_ => {}
+					}
+				}
+
 			}
 			
+
 			/*
 			print!("Enter a number: ");
 			    io::stdout().flush().unwrap();
