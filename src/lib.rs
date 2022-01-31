@@ -18,7 +18,7 @@ use std::collections::HashMap;
 			let mut default = None; 
 			let mut req = None;
 			let mut id = name.to_owned();
-			//let mut stuff: Vec<&str> = vec![];
+			let mut count = 0;
 
 			for wrd in opts.iter(){
 				match wrd {
@@ -31,20 +31,20 @@ use std::collections::HashMap;
 					&"isbool" => {
 						isbool = true;
 					}
-					a => { 
-						let b: String = String::from(a.to_owned());
+					_ => { 
+						let b: String = String::from((&opts[count]).to_owned());
 						if b.starts_with("default:"){
-							
-							default = Some(b.replacen("default:","",1).as_str());
+							default = Some((&opts[count]).to_owned());
 						}
 						if b.starts_with("req:"){
-							req = Some(b.replacen("req:", "",1).as_str());
+							req = Some((&opts[count]).to_owned());
 						}
 						if b.starts_with("id:"){
-							id = b.replacen("id:", "",1).as_str();
+							id = (&opts[count]).to_owned();
 						}
 					}		
 				}
+				count = count+1
 			}
 			
 			let match_any = Regex::new(r".*").unwrap();
@@ -54,14 +54,14 @@ use std::collections::HashMap;
 					&match_any
 				}
 			};
-			/*
+			
 			if isbool {
 				safe_print(name);
 				match default {
-					Some("true") => {
+					Some("default:true") => {
 						safe_print(" (Y/n): ");
 					},
-					Some("false") => {
+					Some("default:false") => {
 						safe_print(" (y/N): ");
 					}
 					Some(_) => {
@@ -73,7 +73,7 @@ use std::collections::HashMap;
 				}
 
 			}
-			*/
+			
 			/*
 			print!("Enter a number: ");
 			    io::stdout().flush().unwrap();
