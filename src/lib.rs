@@ -124,7 +124,8 @@ use crossterm::event::KeyCode;
 						safe_print(": ");
 					}
 				}
-
+				let mut line = String::new();
+				std::io::stdin().read_line(&mut line).unwrap();
 			}	
 
 
