@@ -2,9 +2,12 @@ use regex::Regex;
 use std::io;
 use std::io::Write;
 use std::collections::HashMap;
-use crossterm::{
-	self, Event, read
-}
+use crossterm;
+use crossterm::event;
+use crossterm::event::Event;
+use crossterm::event::read; 
+use crossterm::event::KeyCode;
+
 
 	pub fn ask(
 		fields: Vec<(&str, Vec<&str>, Option<Regex>)>	
@@ -80,32 +83,51 @@ use crossterm::{
 					match read().unwrap() {
 						Event::Key(event) => {
 							match event.code {
-								Keycode::Char('y') => {
+								KeyCode::Char('y') => {
 									safe_print("y");
 									bool_matches.insert(String::from(id), true);
 								}
-								Keycode::Char('Y') => {
+								KeyCode::Char('Y') => {
 									safe_print("Y");
 									bool_matches.insert(String::from(id), true);
 								}
-								Keycode::Char('n') => {
+								KeyCode::Char('n') => {
 									safe_print("n");
 									bool_matches.insert(String::from(id), false);
 								}
-								Keycode::Char('N') => {
+								KeyCode::Char('N') => {
 									safe_print("N");
 									bool_matches.insert(String::from(id), false);
 								}
-								Keycode::Enter => {
-
+								KeyCode::Enter => {
+									break;
 								}
+								_ => {}
 							}
 						},
 						_ => {}
 					}
+
+				}
+				
+
+
+			} else {
+				safe_print(name);
+				match default {
+					Some(i) => {
+						let to_print = i.replacen("default:", "", 1);
+						safe_print(format!(" ({}):", to_print).as_str());
+						break;
+					}
+					None => {
+						safe_print(": ");
+					}
 				}
 
-			}
+			}	
+
+
 			
 
 			/*
