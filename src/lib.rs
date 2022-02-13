@@ -79,7 +79,6 @@ use crossterm::event::KeyCode;
 				}
 
 				loop {
-					// `read()` blocks until an `Event` is available
 					match read().unwrap() {
 						Event::Key(event) => {
 							match event.code {
@@ -127,7 +126,6 @@ use crossterm::event::KeyCode;
 				}
 				let mut line = String::new();
 				loop {
-					// `read()` blocks until an `Event` is available
 					match read().unwrap() {
 						Event::Key(event) => {
 							match event.code {
@@ -143,7 +141,7 @@ use crossterm::event::KeyCode;
 								}
 								KeyCode::Backspace => {
 									safe_print("\u{8}");
-									
+									line = line[..line.len()-1].to_string();
 								}
 								KeyCode::Enter => {
 									safe_print("\n");
@@ -155,6 +153,19 @@ use crossterm::event::KeyCode;
 						_ => {}
 					}
 
+				}
+				if _reg.is_match(line) {
+					str_matches.insert(String::from(id), line);
+					break;
+				} else {
+					match req {
+						None => {
+							println!("Field must match {}", (&_reg).to_owned());
+						}
+						Some(rq) => {
+							println!("Field must {}", rq);
+						}
+					}
 				}
 			}
 			}	
