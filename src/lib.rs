@@ -3,7 +3,7 @@ use std::io;
 use std::io::Write;
 use std::collections::HashMap;
 use crossterm;
-use crossterm::event;
+
 use crossterm::event::Event;
 use crossterm::event::read; 
 use crossterm::event::KeyCode;
@@ -13,7 +13,7 @@ use crossterm::event::KeyCode;
 		fields: Vec<(&str, Vec<&str>, Option<Regex>)>	
 	) -> (HashMap<String, String>, HashMap<String, bool>){
 
-		let mut str_matches: HashMap<String, String> = HashMap::new();
+		let str_matches: HashMap<String, String> = HashMap::new();
 		let mut bool_matches: HashMap<String, bool> = HashMap::new();
 
 		for i in fields.iter(){
@@ -113,6 +113,7 @@ use crossterm::event::KeyCode;
 
 
 			} else {
+				loop {
 				safe_print(name);
 				match default {
 					Some(i) => {
@@ -125,7 +126,37 @@ use crossterm::event::KeyCode;
 					}
 				}
 				let mut line = String::new();
-				std::io::stdin().read_line(&mut line).unwrap();
+				loop {
+					// `read()` blocks until an `Event` is available
+					match read().unwrap() {
+						Event::Key(event) => {
+							match event.code {
+								KeyCode::Char(ch) => {
+									let ch = format!("{}", ch);
+									if !hidden {
+										safe_print(&ch.as_str());
+									} else {
+										safe_print("*");
+									}
+									
+									line = line + ch.as_str();
+								}
+								KeyCode::Backspace => {
+									safe_print("\u{8}");
+									
+								}
+								KeyCode::Enter => {
+									safe_print("\n");
+									break;
+								}
+								_ => {}
+							}
+						},
+						_ => {}
+					}
+
+				}
+			}
 			}	
 
 
