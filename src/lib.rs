@@ -167,19 +167,6 @@ pub fn ask(
                 }
             }
         }
-
-
-
-
-        /*
-			print!("Enter a number: ");
-			    io::stdout().flush().unwrap();
-    			let mut val = String::new();
-
-		    io::stdin().read_line(&mut val)
-        		.expect("Error getting guess");
-			*/
-
     }
     return (str_matches, bool_matches);
 }
