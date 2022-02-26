@@ -1,5 +1,8 @@
-use regex::Regex;
-use std::io;
+
+
+pub mod ask{
+    pub use regex::Regex;
+    use std::io;
 use std::io::Write;
 use std::collections::HashMap;
 use crossterm;
@@ -7,13 +10,13 @@ use crossterm;
 use crossterm::event::Event;
 use crossterm::event::read;
 use crossterm::event::KeyCode;
-
+mod getin;
 
 pub fn ask(
     fields: Vec<(&str, Vec<&str>, Option<Regex>)>,
 ) -> (HashMap<String, String>, HashMap<String, bool>) {
 
-    let str_matches: HashMap<String, String> = HashMap::new();
+    let mut str_matches: HashMap<String, String> = HashMap::new();
     let mut bool_matches: HashMap<String, bool> = HashMap::new();
 
     for i in fields.iter() {
@@ -122,37 +125,15 @@ pub fn ask(
                         safe_print(": ");
                     }
                 }
-                let mut line = String::new();
-                loop {
-                    match read().unwrap() {
-                        Event::Key(event) => {
-                            match event.code {
-                                KeyCode::Char(ch) => {
-                                    let ch = format!("{}", ch);
-                                    if !hidden {
-                                        safe_print(&ch.as_str());
-                                    } else {
-                                        safe_print("*");
-                                    }
-
-                                    line = line + ch.as_str();
-                                }
-                                KeyCode::Backspace => {
-                                    safe_print("\u{8}");
-                                    line = line[..line.len() - 1].to_string();
-                                }
-                                KeyCode::Enter => {
-                                    safe_print("\n");
-                                    break;
-                                }
-                                _ => {}
-                            }
+                let line = getin::get_in(&hidden);
+                if _reg.is_match(&line.as_str()) {
+                    if confirm {
+                        let confline = getin::get_in(&hidden);
+                        if line != confline {
+                            println!("Fields dont match");
+                            continue;
                         }
-                        _ => {}
                     }
-
-                }
-                if _reg.is_match(line) {
                     str_matches.insert(String::from(id), line);
                     break;
                 } else {
@@ -171,7 +152,12 @@ pub fn ask(
     return (str_matches, bool_matches);
 }
 
+
 fn safe_print(a1: &str) {
     print!("{}", a1);
     io::stdout().flush().unwrap();
 }
+
+
+}
+
