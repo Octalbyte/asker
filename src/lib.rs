@@ -1,22 +1,38 @@
 
 #[cfg(test)]
 pub mod tests {
+    use regex::Regex;
     use crate::ask;
     #[test]
     fn test(){
-        let mut fields: Vec<(&str, Vec<&str>, Option<ask::Regex>)> = vec![];
-        fields.push(
-            ("email", vec![], None)
-        );
+        let fields: Vec<(&str, Vec<&str>, Option<ask::Regex>)> = vec![
+            ("email", vec![""], Some(Regex::new(r".*@gmail.com").unwrap())),
+            ("username", vec!["req: Must be only lower-case letters", "default:uglyoctopus"], Some(Regex::new(r"\p{Ll}").unwrap())),
+            ("Are you logged?", vec!["isbool", "id:islogged"], None),
+            ("password", vec!["hidden", "confirm"], None),
+            ("In which year were you born", vec!["id:birth","default:1999"], Some(Regex::new(r"\p{Nd}").unwrap())),
+            ("Do you agree to the Terms of Service?", vec!["id:terms", "isbool", "default:true"], None),
+        ];
         let (mut f, mut b) = ask::ask(fields);
+
+        println!("\nString results");
+
         for (index, value) in f.iter_mut() {
             println!("{} --> {}", index, value);
         }
+
+        println!("\nBool results");
+
         for (index, value) in b.iter_mut() {
             println!("{} --> {}", index, value);
         }
+
+        println!("");
     }
 }
+
+
+
 
 
 pub mod ask{
@@ -82,13 +98,19 @@ pub fn ask(
         };
 
         if isbool {
-            safe_print(name);
-            match default {
+            
+
+            loop {
+                safe_print(name);
+                let mut default_as_bool = None;
+                match default {
                 Some("default:true") => {
                     safe_print(" (Y/n): ");
+                    default_as_bool = Some(true);
                 }
                 Some("default:false") => {
                     safe_print(" (y/N): ");
+                    default_as_bool = Some(false);
                 }
                 Some(_) => {
                     panic!("Invalid default for bool: Accepted values: false, true");
@@ -96,30 +118,46 @@ pub fn ask(
                 None => {
                     safe_print(" (y/n): ");
                 }
-            }
+                }
 
-            loop {
+                let id = id.replacen("id:","", 1);
+                let id = id.as_str();
+
+
                 match read().unwrap() {
                     Event::Key(event) => {
                         match event.code {
                             KeyCode::Char('y') => {
-                                safe_print("y");
+                                safe_print("y\n");
                                 bool_matches.insert(String::from(id), true);
+                                break;
                             }
                             KeyCode::Char('Y') => {
-                                safe_print("Y");
+                                safe_print("Y\n");
                                 bool_matches.insert(String::from(id), true);
+                                break;
                             }
                             KeyCode::Char('n') => {
-                                safe_print("n");
+                                safe_print("n\n");
                                 bool_matches.insert(String::from(id), false);
+                                break;
                             }
                             KeyCode::Char('N') => {
-                                safe_print("N");
+                                safe_print("N\n");
                                 bool_matches.insert(String::from(id), false);
+                                break;
                             }
                             KeyCode::Enter => {
-                                break;
+                                safe_print("\n");
+                                match default_as_bool {
+                                    Some(td) => {
+                                        bool_matches.insert(String::from(id), td);
+                                        break;
+                                    }
+                                    None => {
+                                        println!("You must input Y or N");
+                                    }
+                                }
                             }
                             _ => {}
                         }
@@ -134,26 +172,45 @@ pub fn ask(
         } else {
             loop {
                 safe_print(name);
+                let mut hasdefault = false;
                 match default {
                     Some(i) => {
                         let to_print = i.replacen("default:", "", 1);
                         safe_print(format!(" ({}):", to_print).as_str());
-                        break;
+                        hasdefault = true;
                     }
                     None => {
                         safe_print(": ");
                     }
                 }
-                let line = getin::get_in(&hidden);
-                if _reg.is_match(line.as_str()) {
+                let mut line = getin::get_in(&hidden);
+                if _reg.is_match(line.as_str()) || (line.as_str() == "" && hasdefault ){
                     if confirm {
+                        safe_print(format!("Confirm {}", name).as_str());
+                        match default {
+                            Some(i) => {
+                                let to_print = i.replacen("default:", "", 1);
+                                safe_print(format!(" ({}):", to_print).as_str());
+                            }
+                            None => {
+                                safe_print(": ");
+                            }
+                        }
                         let confline = getin::get_in(&hidden);
                         if line != confline {
-                            println!("Fields dont match");
+                            println!("Fields do not match");
                             continue;
                         }
                     }
-                    str_matches.insert(String::from(id), line);
+                    if line.as_str() == "" {
+                        match default {
+                            Some(td) => {
+                                line = String::from(td.replacen("default:","",1));
+                            },
+                            _ => {}
+                        }
+                    }
+                    str_matches.insert(String::from(id.replacen("id:","",1)), line);
                     break;
                 } else {
                     match req {
@@ -161,7 +218,7 @@ pub fn ask(
                             println!("Field must match {}", (&_reg).to_owned());
                         }
                         Some(rq) => {
-                            println!("Field must {}", rq);
+                            println!("Field requirements: {}", rq.replacen("req:", "", 1));
                         }
                     }
                 }
