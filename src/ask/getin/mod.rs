@@ -20,12 +20,12 @@ pub fn get_in(hidden: &bool) -> String{
                     KeyCode::Char(ch) => {
                         let ch = format!("{}", ch);
                         if !hidden {
-                            safe_print(&ch.as_str());
+                            safe_print(ch.as_str());
                         } else {
                             safe_print("*");
                         }
 
-                        line = line + ch.as_str();
+                        line += ch.as_str();
                     }
                     KeyCode::Backspace => {
                         safe_print("\u{8}");
@@ -41,5 +41,5 @@ pub fn get_in(hidden: &bool) -> String{
             _ => {}
         }
     }
-    return line;
+    line
 }

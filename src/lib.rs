@@ -8,8 +8,13 @@ pub mod tests {
         fields.push(
             ("email", vec![], None)
         );
-        let (f, b) = ask::ask(fields);
-        println!("{}", f);
+        let (mut f, mut b) = ask::ask(fields);
+        for (index, value) in f.iter_mut() {
+            println!("{} --> {}", index, value);
+        }
+        for (index, value) in b.iter_mut() {
+            println!("{} --> {}", index, value);
+        }
     }
 }
 
@@ -67,7 +72,7 @@ pub fn ask(
                     }
                 }	
             }
-            count = count + 1
+            count += 1
         }
 
         let match_any = Regex::new(r".*").unwrap();
@@ -140,7 +145,7 @@ pub fn ask(
                     }
                 }
                 let line = getin::get_in(&hidden);
-                if _reg.is_match(&line.as_str()) {
+                if _reg.is_match(line.as_str()) {
                     if confirm {
                         let confline = getin::get_in(&hidden);
                         if line != confline {
@@ -163,7 +168,7 @@ pub fn ask(
             }
         }
     }
-    return (str_matches, bool_matches);
+    (str_matches, bool_matches)
 }
 
 
