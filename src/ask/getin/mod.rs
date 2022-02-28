@@ -1,8 +1,15 @@
 use crossterm;
-use crate::safe_print;
 use crossterm::event::Event;
 use crossterm::event::read;
 use crossterm::event::KeyCode;
+use std::io;
+use std::io::Write; 
+
+fn safe_print(a1: &str) {
+    print!("{}", a1);
+    io::stdout().flush().unwrap();
+}
+
 
 pub fn get_in(hidden: &bool) -> String{
     let mut line = String::new();
@@ -33,7 +40,6 @@ pub fn get_in(hidden: &bool) -> String{
             }
             _ => {}
         }
-
     }
     return line;
-}
+}

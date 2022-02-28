@@ -1,4 +1,18 @@
 
+#[cfg(test)]
+pub mod tests {
+    use crate::ask;
+    #[test]
+    fn test(){
+        let mut fields: Vec<(&str, Vec<&str>, Option<ask::Regex>)> = vec![];
+        fields.push(
+            ("email", vec![], None)
+        );
+        let (f, b) = ask::ask(fields);
+        println!("{}", f);
+    }
+}
+
 
 pub mod ask{
     pub use regex::Regex;
