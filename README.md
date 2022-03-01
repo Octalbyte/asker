@@ -48,3 +48,4 @@ fn main(){
 
 Output:
 
+![image](https://user-images.githubusercontent.com/66487668/156159807-1855ab60-b51c-40e1-a457-bfda74267611.png)
