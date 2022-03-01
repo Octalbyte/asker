@@ -11,3 +11,4 @@ description = "Smoothly get and check user input"
 [dependencies]
 regex = "1.5.4"
 crossterm = "0.22.1"
+safe_print = "1.0.0"

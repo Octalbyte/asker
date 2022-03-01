@@ -2,14 +2,7 @@ use crossterm;
 use crossterm::event::Event;
 use crossterm::event::read;
 use crossterm::event::KeyCode;
-use std::io;
-use std::io::Write; 
-
-fn safe_print(a1: &str) {
-    print!("{}", a1);
-    io::stdout().flush().unwrap();
-}
-
+use safe_print::safe_print;
 
 pub fn get_in(hidden: &bool) -> String{
     let mut line = String::new();

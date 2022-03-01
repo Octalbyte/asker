@@ -3,6 +3,7 @@
 pub mod tests {
     use regex::Regex;
     use crate::ask;
+
     #[test]
     fn test(){
         let fields: Vec<(&str, Vec<&str>, Option<ask::Regex>)> = vec![
@@ -37,8 +38,6 @@ pub mod tests {
 
 pub mod ask{
     pub use regex::Regex;
-    use std::io;
-use std::io::Write;
 use std::collections::HashMap;
 use crossterm;
 
@@ -46,6 +45,7 @@ use crossterm::event::Event;
 use crossterm::event::read;
 use crossterm::event::KeyCode;
 mod getin;
+use safe_print::safe_print;
 
 pub fn ask(
     fields: Vec<(&str, Vec<&str>, Option<Regex>)>,
@@ -227,13 +227,5 @@ pub fn ask(
     }
     (str_matches, bool_matches)
 }
-
-
-fn safe_print(a1: &str) {
-    print!("{}", a1);
-    io::stdout().flush().unwrap();
-}
-
-
 }
 
