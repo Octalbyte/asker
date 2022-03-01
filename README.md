@@ -12,6 +12,9 @@ asker = "0.1.0"
 ```
 
 ## Usage 
+
+For a complete guide, check [GUIDE.md](https://github.com/Octalbyte/asker/blob/main/GUIDE.md) and [examples](https://github.com/Octalbyte/asker/tree/main/examples)
+
 ```rust
 use asker::ask;
 use asker::Regex;
