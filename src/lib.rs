@@ -31,35 +31,22 @@ pub fn ask(fields: FieldSet) -> (HashMap<String, String>, HashMap<String, bool>)
 
         for wrd in opts.iter() {
             match wrd {
-                &"hidden" => {
-                    hidden = true;
-                }
-                &"confirm" => {
-                    confirm = true;
-                }
-                &"isbool" => {
-                    isbool = true;
-                }
+                &"hidden" => {hidden = true;}
+                &"confirm" => {confirm = true}
+                &"isbool" => {isbool = true;}
                 _ => {
                     let b: String = String::from((&opts[count]).to_owned());
-                    if b.starts_with("default:") {
-                        default = Some((&opts[count]).to_owned());
-                    }
-                    if b.starts_with("req:") {
-                        req = Some((&opts[count]).to_owned());
-                    }
-                    if b.starts_with("id:") {
-                        id = (&opts[count]).to_owned();
-                    }
+                    if b.starts_with("default:") {default = Some((&opts[count]).to_owned());}
+                    if b.starts_with("req:") {req = Some((&opts[count]).to_owned());}
+                    if b.starts_with("id:") {id = (&opts[count]).to_owned();}
                 }	
             }
             count += 1
         }
 
-        let match_any = Regex::new(r".*").unwrap();
         let _reg = match checker {
-            Some(exp) => exp,
-            None => &match_any,
+            Some(exp) => exp.to_owned(),
+            None => Regex::new(r".*").unwrap()
         };
 
         if isbool {
