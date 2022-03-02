@@ -5,14 +5,13 @@ pub mod tests;
 
 pub mod ask{
     pub use regex::Regex;
-use std::collections::HashMap;
+    use std::collections::HashMap;
 
+    
+    mod askbool;
+    mod askstring;
 
-mod getin;
-mod askbool;
-use safe_print::safe_print;
-
-type FieldSet<'a> = Vec<(&'a str, Vec<&'a str>, Option<Regex>)>;
+    pub type FieldSet<'a> = Vec<(&'a str, Vec<&'a str>, Option<Regex>)>;
 
 pub fn ask(fields: FieldSet) -> (HashMap<String, String>, HashMap<String, bool>) {
 
@@ -44,7 +43,7 @@ pub fn ask(fields: FieldSet) -> (HashMap<String, String>, HashMap<String, bool>)
             count += 1
         }
 
-        let _reg = match checker {
+        let reg = match checker {
             Some(exp) => exp.to_owned(),
             None => Regex::new(r".*").unwrap()
         };
@@ -59,59 +58,7 @@ pub fn ask(fields: FieldSet) -> (HashMap<String, String>, HashMap<String, bool>)
             )
                 
         } else {
-            loop {
-                safe_print(name);
-                let mut hasdefault = false;
-                match default {
-                    Some(i) => {
-                        let to_print = i.replacen("default:", "", 1);
-                        safe_print(format!(" ({}):", to_print).as_str());
-                        hasdefault = true;
-                    }
-                    None => {
-                        safe_print(": ");
-                    }
-                }
-                let mut line = getin::get_in(&hidden);
-                if _reg.is_match(line.as_str()) || (line.as_str() == "" && hasdefault ){
-                    if confirm {
-                        safe_print(format!("Confirm {}", name).as_str());
-                        match default {
-                            Some(i) => {
-                                let to_print = i.replacen("default:", "", 1);
-                                safe_print(format!(" ({}):", to_print).as_str());
-                            }
-                            None => {
-                                safe_print(": ");
-                            }
-                        }
-                        let confline = getin::get_in(&hidden);
-                        if line != confline {
-                            println!("Fields do not match");
-                            continue;
-                        }
-                    }
-                    if line.as_str() == "" {
-                        match default {
-                            Some(td) => {
-                                line = String::from(td.replacen("default:","",1));
-                            },
-                            _ => {}
-                        }
-                    }
-                    str_matches.insert(String::from(id.replacen("id:","",1)), line);
-                    break;
-                } else {
-                    match req {
-                        None => {
-                            println!("Field must match {}", (&_reg).to_owned());
-                        }
-                        Some(rq) => {
-                            println!("Field requirements: {}", rq.replacen("req:", "", 1));
-                        }
-                    }
-                }
-            }
+            askstring::askstring(name, default, hidden, confirm, reg, req, id, &mut str_matches);
         }
     }
     (str_matches, bool_matches)
