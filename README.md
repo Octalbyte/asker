@@ -48,4 +48,4 @@ For a complete guide, check [GUIDE.md](https://github.com/Octalbyte/asker/blob/m
 
 Output:
 
-![image](https://user-images.githubusercontent.com/66487668/156159807-1855ab60-b51c-40e1-a457-bfda74267611.png)
+![image](https://user-images.githubusercontent.com/66487668/156417554-17ece8d6-a4fa-4320-9bf2-af13945fdf8a.png)
