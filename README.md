@@ -1,14 +1,10 @@
-# asker (WIP)	
-Input prompt, for Rust (WIP)
-
-FOR NOW THE CRATE NAME IS PARKED WHILE DEVELOPMENT OCCURS
-
-visit [the github](https://github.com/Octalbyte/asker)
+# asker 
+Input prompt, for Rust 
 
 ## Install
 ```toml
 [dependencies]
-asker = "0.1.0"
+asker = "0.2.0"
 ```
 
 ## Usage 
@@ -19,6 +15,8 @@ For a complete guide, check [GUIDE.md](https://github.com/Octalbyte/asker/blob/m
     use asker::ask::Regex;
     use asker::ask;
     use asker::ask::FieldSet;
+
+    // This example demonstrates basic usage, and main features
 
     fn main(){
         let fields: FieldSet = vec![
