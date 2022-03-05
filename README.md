@@ -4,7 +4,7 @@ Input prompt, for Rust
 ## Install
 ```toml
 [dependencies]
-asker = "0.2.0"
+asker = "0.3.0"
 ```
 
 ## Usage 
