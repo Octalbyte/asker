@@ -18,7 +18,7 @@ asker::ask::ask(
 	vec![
 		("name", vec![], None)
 	]
-)
+);
 
 ```
 
