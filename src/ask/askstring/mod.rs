@@ -1,5 +1,6 @@
 use safe_print::safe_print;
 use std::collections::HashMap;
+
 mod getin;
 
 pub fn askstring(
@@ -13,6 +14,7 @@ pub fn askstring(
     str_matches: &mut HashMap<String, String>,
 ) {
     loop {
+        safe_print(" \x1b[32m ? \x1b[0m");
         safe_print(name);
         let mut hasdefault = false;
         match default {
@@ -28,6 +30,7 @@ pub fn askstring(
         let mut line = getin::get_in(&hidden);
         if _reg.is_match(line.as_str()) || (line.as_str() == "" && hasdefault) {
             if confirm {
+                safe_print(" \x1b[32m ? \x1b[0m");
                 safe_print(format!("Confirm {}", name).as_str());
                 match default {
                     Some(i) => {

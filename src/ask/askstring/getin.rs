@@ -12,9 +12,9 @@ pub fn get_in(hidden: &bool) -> String {
                 KeyCode::Char(ch) => {
                     let ch = format!("{}", ch);
                     if !hidden {
-                        safe_print(ch.as_str());
+                        safe_print(&("\x1b[36m".to_owned()+ch.as_str()+"\x1b[0m"));
                     } else {
-                        safe_print("*");
+                        safe_print("\x1b[36m*\x1b[0m");
                     }
 
                     line += ch.as_str();

@@ -11,6 +11,7 @@ pub fn ask_bool(
     bool_matches: &mut HashMap<String, bool>,
 ) {
     loop {
+        safe_print(" \x1b[32m ? \x1b[0m");
         safe_print(name);
         let mut default_as_bool = None;
         match default {
@@ -36,22 +37,22 @@ pub fn ask_bool(
         match read().unwrap() {
             Event::Key(event) => match event.code {
                 KeyCode::Char('y') => {
-                    safe_print("y\n");
+                    safe_print("\x1b[36my\x1b[0m\n");
                     bool_matches.insert(String::from(id), true);
                     break;
                 }
                 KeyCode::Char('Y') => {
-                    safe_print("Y\n");
+                    safe_print("\x1b[36mY\x1b[0m\n");
                     bool_matches.insert(String::from(id), true);
                     break;
                 }
                 KeyCode::Char('n') => {
-                    safe_print("n\n");
+                    safe_print("\x1b[36mn\x1b[0m\n");
                     bool_matches.insert(String::from(id), false);
                     break;
                 }
                 KeyCode::Char('N') => {
-                    safe_print("N\n");
+                    safe_print("\x1b[36mN\x1b[0m\n");
                     bool_matches.insert(String::from(id), false);
                     break;
                 }
