@@ -65,7 +65,12 @@ pub fn ask_bool(
                         Some(td) => {
                             match default_as_str {
                                 Some(st) => {
-                                  safe_print(&("\x1b[36m".to_owned() + st + "\x1b[0m"));
+                                  if st == "true" {
+                                  safe_print(&("\x1b[36mY\x1b[0m"));
+                                  } else {
+                                    safe_print(&("\x1b[36mN\x1b[0m"));
+                                  }
+
                                   safe_print("\n");
                                 },
                                 _ => {
