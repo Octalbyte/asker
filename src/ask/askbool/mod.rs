@@ -14,14 +14,17 @@ pub fn ask_bool(
         safe_print(" \x1b[32m ? \x1b[0m");
         safe_print(name);
         let mut default_as_bool = None;
+        let mut default_as_str = None;
         match default {
             Some("default:true") => {
                 safe_print(" (Y/n): ");
                 default_as_bool = Some(true);
+                default_as_str = Some("true");
             }
             Some("default:false") => {
                 safe_print(" (y/N): ");
                 default_as_bool = Some(false);
+                default_as_str = Some("false");
             }
             Some(_) => {
                 panic!("Invalid default for bool: Accepted values: false, true");
@@ -57,9 +60,18 @@ pub fn ask_bool(
                     break;
                 }
                 KeyCode::Enter => {
-                    safe_print("\n");
+                    
                     match default_as_bool {
                         Some(td) => {
+                            match default_as_str {
+                                Some(st) => {
+                                  safe_print(&("\x1b[36m".to_owned() + st + "\x1b[0m"));
+                                  safe_print("\n");
+                                },
+                                _ => {
+                                    safe_print("\n");
+                                }
+                            }
                             bool_matches.insert(String::from(id), td);
                             break;
                         }

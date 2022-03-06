@@ -24,7 +24,6 @@ pub fn get_in(hidden: &bool) -> String {
                     line = line[..line.len() - 1].to_string();
                 }
                 KeyCode::Enter => {
-                    safe_print("\n");
                     break;
                 }
                 _ => {}

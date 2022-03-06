@@ -20,7 +20,7 @@ pub fn askstring(
         match default {
             Some(i) => {
                 let to_print = i.replacen("default:", "", 1);
-                safe_print(format!(" ({}):", to_print).as_str());
+                safe_print(format!(" ({}): ", to_print).as_str());
                 hasdefault = true;
             }
             None => {
@@ -30,6 +30,7 @@ pub fn askstring(
         let mut line = getin::get_in(&hidden);
         if _reg.is_match(line.as_str()) || (line.as_str() == "" && hasdefault) {
             if confirm {
+                safe_print("\n");
                 safe_print(" \x1b[32m ? \x1b[0m");
                 safe_print(format!("Confirm {}", name).as_str());
                 match default {
@@ -50,14 +51,21 @@ pub fn askstring(
             if line.as_str() == "" {
                 match default {
                     Some(td) => {
+                        safe_print(&("\x1b[36m".to_owned() + &td.replacen("default:", "", 1)+ "\x1b[0m"));
+                        safe_print("\n");
                         line = String::from(td.replacen("default:", "", 1));
                     }
-                    _ => {}
+                    _ => {
+                        safe_print("\n");
+                    }
                 }
+            } else {
+                safe_print("\n");
             }
             str_matches.insert(String::from(id.replacen("id:", "", 1)), line);
             break;
         } else {
+            safe_print("\n");
             match req {
                 None => {
                     println!("Field must match {}", (&_reg).to_owned());
