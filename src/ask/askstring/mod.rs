@@ -71,7 +71,7 @@ pub fn askstring(
                     println!("Field must match {}", (&_reg).to_owned());
                 }
                 Some(rq) => {
-                    println!("Field requirements: {}", rq.replacen("req:", "", 1));
+                    println!("{}", rq.replacen("req:", "", 1));
                 }
             }
         }
